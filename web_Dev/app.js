@@ -25,25 +25,30 @@ app.use(express.json());
 
 app.get("/search/:title" , (req,res) => {
     const {page = 1,limit = 8} = req.query
+    if (page <= 0){
+        res.status(400).json({
+            error : `page number not found ${page}`
+        })
+    }
     Product.find({
         title: { $regex: ".*" + req.params.title + ".*" , $options: "i" },
-      }).limit(limit*1)
+        }).limit(limit*1)
         .skip((page - 1) * limit)
         .exec((err, data) => {
         if (err) {
-          console.log(err);
-          res.status(400).json({
-            error: err,
-          });
+            console.log(err);
+            res.status(400).json({
+                error: err,
+            });
         } else if (data) {
-          res.status(200).json({
-            message: data.length
-              ? `Found ${data.length} results for the searched term`
-              : `Found nothing`,
-            My_data: data,
-          });
+            res.status(200).json({
+                message: data.length
+                    ? `Found ${data.length} results for the searched term`
+                    : `Found nothing`,
+                My_data: data
+            });
         }
-      });
+    });
 })
 
 
