@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 const mongoose = require("mongoose");
 const Product = require("../Web_Dev/product")
+const User = require("../Web_Dev/users")
 const Str = require('@supercharge/strings')
 const port = 5000;
 
@@ -49,6 +50,55 @@ app.get("/search/:title" , (req,res) => {
             });
         }
     });
+})
+
+
+app.get("/Shop/:username" , (req,res) => {
+    // User.findOne({username : req.params.username},{_id : req.params.id})
+    // User.aggregate([
+    //     {
+    //         $lookup :
+    //         {
+    //             from : "Products",
+    //             localField : "_id",
+    //             foriegnField : "_id",
+    //             as : "customers_details"
+    //         }
+    //     }
+    // ]).toArray ( function (err,data){
+    //     if (err){
+    //         res.status(400).json({
+    //             error : err
+    //         })
+    //     }else if (data) {
+    //         console.log(data)
+    //         res.status(200).json({
+    //             data : data
+    //         })
+    //     }
+    // })
+    User.findOne({username : req.params.username})
+    .exec((err,data) => {
+        if (err){
+            res.status(400).json({
+                error : err
+            })
+        }else if (data) {
+            console.log(data)
+            const user_id = data._id
+            Product.find({userId : user_id}).exec((err,data) => {
+                if (err){
+                    res.status(400).json({
+                        error : err
+                    })
+                }else if (data){
+                    res.status(200).json({
+                        data : data
+                    })
+                }
+            })
+        }
+    })
 })
 
 
