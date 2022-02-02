@@ -7,8 +7,9 @@
   },
   "name": "web_project",
   "version": "1.0.0",
-  "main": "output.js",
+  "main": "web_Dev",
   "scripts": {
+    "start" : "nodemon web_Dev/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
