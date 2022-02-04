@@ -24,3 +24,46 @@ exports.search_users = async (req,res) => {
         })
     }
 }
+
+
+exports.newProduct = async (req,res) => {
+    try {
+        const {title,price,mrp,quantity,info,imgUrl,imgKey,sizes,colors,userId,createdOn,visibility,status,popularProduct} = req.body;
+        if (mrp > price){
+            const productDetails =  new Product({
+                title,
+                price,
+                mrp,
+                quantity,
+                info,
+                imgUrl,
+                imgKey,
+                sizes,
+                colors,
+                userId,
+                createdOn,
+                visibility,
+                status,
+                popularProduct
+            })
+
+            productDetails.save()
+                res.status(201).json({
+                    status: true,
+                    message: "successfully user created....!", 
+                    productDetails
+                });
+        } else {
+            res.status(400).json({
+                err : "your mrp price is less in price...!"
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            status: false,
+            message: "Something went wrong.You might have missed some field",
+            error,
+        })
+    }
+}

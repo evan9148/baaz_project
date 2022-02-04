@@ -10,7 +10,7 @@ var userSchema = mongoose.Schema ({
   },
   mobile: {
     type: Number,
-    unique: true 
+    unique: true
   },
   token: {
     type: String
@@ -70,6 +70,9 @@ var userSchema = mongoose.Schema ({
   username: { 
     type: String, 
     unique: true 
+  },
+  email: {
+    type: String,
   },
 
 });

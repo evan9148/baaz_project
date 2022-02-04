@@ -19,28 +19,13 @@ var product_schema = mongoose.Schema ({
     imgUrl: {
       type : String
     },
-    imgUrls: {
-      type : String
-    },
     imgKey: {
-      type : String
-    },
-    brandName: {
-      type : String
-    },
-    brandId: {
       type : String
     },
     sizes: {
       type : String
     },
     colors: {
-      type : String
-    },
-    brandName: {
-      type : String
-    },
-    brandId: {
       type : String
     },
     userId: {
