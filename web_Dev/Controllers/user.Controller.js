@@ -61,3 +61,20 @@ exports.newUser = async (req, res) => {
 }
 
 
+// Delete user details...!
+exports.deleteUser = async (req,res) => {
+    try {
+        const userDetail = await User.findOneAndDelete({username : req.params.username})
+        console.log(userDetail, "hgduf")
+        if (userDetail){
+            return res.status(201).json({
+                deleted :" user details deleted successfully"
+            })
+        }
+    }catch (err){
+        console.log(err)
+        return res.status(400).json({
+            error : err
+        })
+    }
+} 

@@ -6,6 +6,8 @@ const productRoute = require("./routes/product.route");
 const newRoute = require("./routes/user.route");
 const proRoute = require("./routes/product.route");
 const UpdateProductRoute = require("./routes/product.route");
+const deleteUserRoute = require("./routes/user.route");
+const deleteProductRoute = require("./routes/product.route");
 const port = 5000;
 
 
@@ -31,7 +33,9 @@ app.use("/api/user", userRoute);
 app.use("/api/product", productRoute);
 app.use("/api/newUser", newRoute);
 app.use("/api/newProduct", proRoute);
-app.use("/api/Productsupdate", UpdateProductRoute)
+app.use("/api/Productsupdate", UpdateProductRoute);
+app.use("/api/Userdelete" ,deleteUserRoute);
+app.use("/api/productdelete", deleteProductRoute)
 
 
 app.listen(port,()=>{

@@ -99,3 +99,21 @@ exports.updateProduct = async (req,res) => {
         })
     }
 }
+
+
+// Delete api for products collections ...!
+exports.deleteProduct = async (req,res) => {
+    try {
+        const productDetail = await Product.findOneAndDelete({_id : req.params.id})
+        if (productDetail){
+            return res.status(201).json({
+                deleted :  "products deleted successfully"
+            })
+        }
+    }catch (err){
+        console.log(err)
+        return res.status(400).json({
+            error : err
+        })
+    }
+} 
