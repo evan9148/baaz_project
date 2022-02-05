@@ -67,3 +67,35 @@ exports.newProduct = async (req,res) => {
         })
     }
 }
+
+// update api for products collection....!
+exports.updateProduct = async (req,res) => {
+    try {
+        const productUpdate = await Product.findOneAndUpdate({_id: req.params.id},{
+            $set:{
+                title: req.body.title,
+                price: req.body.price,
+                mrp: req.body.mrp,
+                quantity: req.body.quantity,
+                info: req.body.info,
+                imgUrl: req.body.imgUrl,
+                imgKey: req.body.imgKey,
+                sizes: req.body.sizes,
+                colors: req.body.colors,
+                userId: req.body.userId,
+                createdOn: req.body.createdOn,
+                visibility: req.body.visibility,
+                status: req.body.status,
+                popularProduct: req.body.popularProduct
+            }
+        })
+        return res.status(200).json({
+                updated: "updated successfully",
+                productUpdate
+            })
+    }catch (err) {
+        return res.status(400).json({
+            error : err
+        })
+    }
+}
