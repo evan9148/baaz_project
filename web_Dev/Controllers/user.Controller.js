@@ -1,14 +1,16 @@
 const User = require("../models/users");
-const Product = require("../models/product")
+const Product = require("../models/product");
 
 // Get api ...!
 exports.userProduct = async (req, res) => {
     try {
         const getUser = await User.findOne({ username: req.params.username })
         if (getUser) {
-            console.log(getUser)
+            // console.log(getUser)
             const user_id = getUser._id
             const getProduct = await Product.find({ userId: user_id })
+            req.session.getProduct = getProduct
+            req.session.save()
             res.status(200).json({
                 data: getProduct
             })
@@ -18,6 +20,7 @@ exports.userProduct = async (req, res) => {
             })
         }
     } catch (err) {
+        console.log(err)
         res.status(400).json({
             error: err
         })

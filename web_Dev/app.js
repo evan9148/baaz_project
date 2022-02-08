@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
+const sessions = require('express-session');
 const userRoute = require("./routes/user.route");
 const productRoute = require("./routes/product.route");
 const newRoute = require("./routes/user.route");
@@ -26,7 +28,20 @@ mongoose
         console.log(err);
     });
 
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+const oneDay = 1000 * 60 * 60 * 24;
+app.use(sessions({
+    key : "id",
+    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+    saveUninitialized: true,
+    cookie: { maxAge: oneDay },
+    resave: false
+}));
+
+
 
 // route middlewares...!
 app.use("/api/user", userRoute);
@@ -35,7 +50,8 @@ app.use("/api/newUser", newRoute);
 app.use("/api/newProduct", proRoute);
 app.use("/api/Productsupdate", UpdateProductRoute);
 app.use("/api/Userdelete" ,deleteUserRoute);
-app.use("/api/productdelete", deleteProductRoute)
+app.use("/api/productdelete", deleteProductRoute);
+
 
 
 app.listen(port,()=>{

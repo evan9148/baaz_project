@@ -5,6 +5,6 @@ const {search_users,newProduct,updateProduct,deleteProduct} = require("../contro
 router.get("/search/:title" , search_users)
 router.post("/product", newProduct)
 router.put("/updateProducts/:id" , updateProduct)
-router.delete("/deleteProduct/:id", deleteProduct)
+router.delete("/deleteProduct/:id", deleteProduct) 
 
 module.exports = router
