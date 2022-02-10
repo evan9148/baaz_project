@@ -10,6 +10,7 @@ const proRoute = require("./routes/product.route");
 const UpdateProductRoute = require("./routes/product.route");
 const deleteUserRoute = require("./routes/user.route");
 const deleteProductRoute = require("./routes/product.route");
+const AddCartRoute = require("./routes/cart.route");
 const port = 5000;
 
 
@@ -34,7 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 const oneDay = 1000 * 60 * 60 * 24;
 app.use(sessions({
-    key : "id",
+    key : "New_id",
     secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
     saveUninitialized: true,
     cookie: { maxAge: oneDay },
@@ -51,7 +52,7 @@ app.use("/api/newProduct", proRoute);
 app.use("/api/Productsupdate", UpdateProductRoute);
 app.use("/api/Userdelete" ,deleteUserRoute);
 app.use("/api/productdelete", deleteProductRoute);
-
+app.use("/api/Cart", AddCartRoute);
 
 
 app.listen(port,()=>{
