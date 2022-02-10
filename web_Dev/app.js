@@ -14,6 +14,7 @@ const AddCartRoute = require("./routes/cart.route");
 const port = 5000;
 
 
+// mongodb connection....!
 mongoose
     .connect(
         `mongodb+srv://baaz_evanjali:ymP6SbK79wPtAyUg@cluster0.rluns.mongodb.net/MVCFormat`,
