@@ -112,57 +112,53 @@ exports.getSlots = async (req, res) => {
         async (slot_check) => {
           var free_slots = [];
           if (slot_check.status) {
-            Live_Request.find({
+            var booked_slots = await Live_Request.find({
               scheduledTime: {
                 $gte: slot_check.startHour,
                 $lt: slot_check.endHour,
               },
               visibility: true,
-            }).exec((err, booked_slots) => {
-              if (err) {
-                console.log(err);
-              } else {
-                var date = new Date();
-                var coff = 1000 * 60 * 30;
-                var temp_time =
-                  slot_check.startHour >
-                  (Math.ceil(date / 1800000) * 1800000) % (date * 2)
-                    ? (Math.ceil(slot_check.startHour / 1800000) * 1800000) %
-                      (slot_check.startHour * 2)
-                    : (Math.ceil(date / 1800000) * 1800000) % (date * 2);
-                console.log(temp_time, slot_check.endHour);
-                while (temp_time < slot_check.endHour) {
-                  var slot_check_bool = false;
-                  booked_slots.forEach((booked_slot) => {
-                    console.log(
-                      booked_slot.schedule_id == fetch_slot_id(temp_time)
-                    );
-                    if (booked_slot.schedule_id == fetch_slot_id(temp_time)) {
-                      slot_check_bool = true;
-                    }
-                  });
-                  if (slot_check_bool) {
-                    free_slots.push({
-                      availability: false,
-                      time: temp_time,
-                      slot_id: fetch_slot_id(temp_time),
-                    });
-                    temp_time += 1000 * 60 * 30;
-                  } else {
-                    free_slots.push({
-                      availability: true,
-                      time: temp_time,
-                      slot_id: fetch_slot_id(temp_time),
-                    });
-                    temp_time += 1000 * 60 * 30;
-                  }
+            }).exec();
+
+            var date = new Date();
+            var coff = 1000 * 60 * 30;
+            var temp_time =
+              slot_check.startHour >
+              (Math.ceil(date / 1800000) * 1800000) % (date * 2)
+                ? (Math.ceil(slot_check.startHour / 1800000) * 1800000) %
+                  (slot_check.startHour * 2)
+                : (Math.ceil(date / 1800000) * 1800000) % (date * 2);
+            console.log(temp_time, slot_check.endHour);
+            while (temp_time < slot_check.endHour) {
+              var slot_check_bool = false;
+              booked_slots.forEach((booked_slot) => {
+                console.log(
+                  booked_slot.schedule_id == fetch_slot_id(temp_time)
+                );
+                if (booked_slot.schedule_id == fetch_slot_id(temp_time)) {
+                  slot_check_bool = true;
                 }
-                res.json({
-                  status: true,
-                  slots: free_slots,
-                  days: "all",
+              });
+              if (slot_check_bool) {
+                free_slots.push({
+                  availability: false,
+                  time: temp_time,
+                  slot_id: fetch_slot_id(temp_time),
                 });
+                temp_time += 1000 * 60 * 30;
+              } else {
+                free_slots.push({
+                  availability: true,
+                  time: temp_time,
+                  slot_id: fetch_slot_id(temp_time),
+                });
+                temp_time += 1000 * 60 * 30;
               }
+            }
+            res.json({
+              status: true,
+              slots: free_slots,
+              days: "all",
             });
           } else {
             res.status(200).json({
