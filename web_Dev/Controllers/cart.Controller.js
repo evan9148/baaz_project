@@ -7,13 +7,13 @@ exports.addProduct = async (req,res) => {
     try {
         const addCartProduct = await Product.findOne({})
         console.log(addCartProduct._id)
-        const {id,quantity} = req.body
-        console.log(id)
+        const {productId,quantity} = req.body
+        console.log(productId)
         console.log(quantity)
         // const Productid = Product._id
-        if (id == addCartProduct._id) {
+        if (productId == addCartProduct._id) {
             const products = new Cart({
-                id : req.body.id,
+                productId : req.body.productId,
                 quantity : req.body.quantity
             })
     
