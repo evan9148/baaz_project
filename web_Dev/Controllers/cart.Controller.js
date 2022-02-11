@@ -2,7 +2,7 @@ const Product = require("../models/product")
 const Cart = require("../models/cart")
 
 
-// Add to product api using sessions and cookies....!
+// Add to product api using sessions and cookies for cart collection...!
 exports.addProduct = async (req,res) => {
     try {
         const addCartProduct = await Product.findOne({})
