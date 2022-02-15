@@ -1,6 +1,7 @@
 const Dash_call_Schedule = require("../models/dash_call_schedule");
 const Live_Request = require("../models/live_request");
 
+
 exports.getSlots = async (req, res) => {
   try {
     var user_id = req.query.user_id;
@@ -28,148 +29,73 @@ exports.getSlots = async (req, res) => {
       0
     );
     var endHour = startHour + 86400000;
-    var week = current_date;
+    // var week = current_date;
 
-    var slot = await Dash_call_Schedule.findOne({
-      merchant_id: user_id,
-    }).exec();
-
+    var slot = await Dash_call_Schedule.findOne({merchant_id: user_id});
     if (slot) {
-      slot_check(
-        current_date,
-        slot.type,
-        slot.days,
-        slot.start_time ? slot.start_time : 0,
-        slot.end_time ? slot.end_time : 0,
-        async (slot_check) => {
-          var free_slots = [];
-          if (slot_check.status) {
-            var booked_slots = await Live_Request.find({
-              scheduledTime: {
-                $gte: slot_check.startHour,
-                $lt: slot_check.endHour,
-              },
-              visibility: true,
-            }).exec();
+      slot_check = (slot.current_date,slot.type,slot.days,startHour,endHour, async (check) => {
+        var free_slots = [];
+        if (check.status) {
+          var booked_slots = await Live_Request.find({
+            scheduledTime: {
+              $gte: check.startHour,
+              $lt: check.endHour,
+            },
+            visibility: true,
+          })
 
-            var date = new Date();
-            var coff = 1000 * 60 * 30;
-            var temp_time =
-              slot_check.startHour >
-              (Math.ceil(date / 1800000) * 1800000) % (date * 2)
-                ? (Math.ceil(slot_check.startHour / 1800000) * 1800000) %
-                  (slot_check.startHour * 2)
-                : (Math.ceil(date / 1800000) * 1800000) % (date * 2);
+          var date = new Date();
+          // var coff = 1000 * 60 * 30;
+          var temp_time = check.startHour >
+            (Math.ceil(date / 1800000) * 1800000) % (date * 2)
+              ? (Math.ceil(slot_check.startHour / 1800000) * 1800000) %
+                (check.startHour * 2)
+              : (Math.ceil(date / 1800000) * 1800000) % (date * 2);
 
-            while (temp_time < slot_check.endHour) {
-              var slot_check_bool = false;
-              booked_slots.forEach((booked_slot) => {
-                console.log(
-                  booked_slot.schedule_id == fetch_slot_id(temp_time)
-                );
-                if (booked_slot.schedule_id == fetch_slot_id(temp_time)) {
-                  slot_check_bool = true;
-                }
-              });
-              if (slot_check_bool) {
-                free_slots.push({
-                  availability: false,
-                  time: temp_time,
-                  slot_id: fetch_slot_id(temp_time),
-                });
-                temp_time += 1000 * 60 * 30;
-              } else {
-                free_slots.push({
-                  availability: true,
-                  time: temp_time,
-                  slot_id: fetch_slot_id(temp_time),
-                });
-                temp_time += 1000 * 60 * 30;
+          if (temp_time < check.endHour) {
+            var slot_check_bool = false;
+            booked_slots.forEach((booked_slot) => {
+              console.log(booked_slot.schedule_id == fetch_slot_id(temp_time));
+              if (booked_slot.schedule_id == fetch_slot_id(temp_time)) {
+                slot_check_bool = true;
               }
-            }
-            res.json({
-              status: true,
-              slots: free_slots,
-              days: slot.days,
             });
-          } else {
-            res.status(200).json({
-              status: false,
-              message: "no slots found",
-              days: slot.days,
-              slots: free_slots,
-            });
+            if (slot_check_bool) {
+              free_slots.push({
+                availability: false,
+                time: temp_time,
+                slot_id: fetch_slot_id(temp_time),
+              });
+              temp_time += 1000 * 60 * 30;
+            } 
+            // else {
+            //   free_slots.push({
+            //     availability: true,
+            //     time: temp_time,
+            //     slot_id: fetch_slot_id(temp_time),
+            //   });
+            //   temp_time += 1000 * 60 * 30;
+            // }
           }
+          res.status(201).json({
+            status: true,
+            slots: free_slots,
+            days: "jfuefhefk"
+          });
+        } else {
+          res.status(200).json({
+            status: false,
+            message: "no slots found",
+            days: "all",
+            slots: free_slots,
+          });
         }
+      }
       );
     } else {
-      slot_check(
-        current_date,
-        "",
-        "all",
-        Date.now(),
-        Date.now() + 1000 * 60 * 60 * 23,
-        async (slot_check) => {
-          var free_slots = [];
-          if (slot_check.status) {
-            var booked_slots = await Live_Request.find({
-              scheduledTime: {
-                $gte: slot_check.startHour,
-                $lt: slot_check.endHour,
-              },
-              visibility: true,
-            }).exec();
-
-            var date = new Date();
-            var coff = 1000 * 60 * 30;
-            var temp_time =
-              slot_check.startHour >
-              (Math.ceil(date / 1800000) * 1800000) % (date * 2)
-                ? (Math.ceil(slot_check.startHour / 1800000) * 1800000) %
-                  (slot_check.startHour * 2)
-                : (Math.ceil(date / 1800000) * 1800000) % (date * 2);
-            console.log(temp_time, slot_check.endHour);
-            while (temp_time < slot_check.endHour) {
-              var slot_check_bool = false;
-              booked_slots.forEach((booked_slot) => {
-                console.log(
-                  booked_slot.schedule_id == fetch_slot_id(temp_time)
-                );
-                if (booked_slot.schedule_id == fetch_slot_id(temp_time)) {
-                  slot_check_bool = true;
-                }
-              });
-              if (slot_check_bool) {
-                free_slots.push({
-                  availability: false,
-                  time: temp_time,
-                  slot_id: fetch_slot_id(temp_time),
-                });
-                temp_time += 1000 * 60 * 30;
-              } else {
-                free_slots.push({
-                  availability: true,
-                  time: temp_time,
-                  slot_id: fetch_slot_id(temp_time),
-                });
-                temp_time += 1000 * 60 * 30;
-              }
-            }
-            res.json({
-              status: true,
-              slots: free_slots,
-              days: "all",
-            });
-          } else {
-            res.status(200).json({
-              status: false,
-              message: "no slots found",
-              days: "all",
-              slots: free_slots,
-            });
-          }
-        }
-      );
+      res.status(400).json({
+        error_message : "your slot is not available ....!"
+      })
     }
   } catch (error) {
     console.log(error);
@@ -182,20 +108,18 @@ exports.getSlots = async (req, res) => {
 };
 
 var slot_check = (current_date, type, days, startHour, endHour, callback) => {
-  var current_date = current_date;
-  var days_str = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+  // var current_time = current_date;
+  var days_str = ["sun","mon","tue","wed","thur","fri","sat"];
   console.log(
-    "(days.search(days_str[current_date.getDay()])",
-    days.search(days_str[current_date.getDay()])
-  );
+    "(days.search(days_str[current_date.getDay()])", days.search(days_str[current_date.getDay()]));
   var day_check =
-    ("weekdays" == days &&
-      current_date.getDay() <= 5 &&
-      current_date.getDay()) ||
+    ("weekdays" == days &&  
+    current_date.getDay() <= 5 &&
+    current_date.getDay()) ||
     days == "all" ||
     (days == "weekends" && current_date.getDay() >= 5) ||
-    days.search(days_str[current_date.getDay()]) > -1;
-  if (type == "24x7") {
+    days.search(days_str[current_date.getDay()]) >= -1;
+  if (type == "24x7") { 
     console.log("24x7");
     var startHour = Date.UTC(
       current_date.getFullYear(),

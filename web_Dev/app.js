@@ -16,19 +16,20 @@ const port = 5000;
 
 // mongodb connection....!
 mongoose
-  .connect(
-    `mongodb+srv://baaz_evanjali:ymP6SbK79wPtAyUg@cluster0.rluns.mongodb.net/MVCFormat`,
-    {
-      useUnifiedTopology: true,
-      useNewUrlParser: true,
-    }
-  )
-  .then(() => {
-    console.log("connected with mongodb");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+    .connect(
+        `mongodb+srv://baaz_evanjali:ymP6SbK79wPtAyUg@cluster0.rluns.mongodb.net/MVCFormat`,
+        {
+            useUnifiedTopology: true,
+            useNewUrlParser: true,
+        }
+    )
+    .then(() => {
+        console.log("connected with mongodb");
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -37,13 +38,13 @@ app.use(cookieParser());
 // creating sessions and cookies...!
 const oneDay = 1000 * 60 * 60 * 24;
 app.use(
-  sessions({
-    key: "New_id",
-    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
-    saveUninitialized: true,
-    cookie: { maxAge: oneDay },
-    resave: false,
-  })
+    sessions({
+        key: "New_id",
+        secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+        saveUninitialized: true,
+        cookie: { maxAge: oneDay },
+        resave: false,
+    })
 );
 
 // route middlewares...!
@@ -56,6 +57,7 @@ app.use("/api/Userdelete", deleteUserRoute);
 app.use("/api/productdelete", deleteProductRoute);
 app.use("/api/Cart", AddCartRoute);
 app.use("/live/call", dash_schedule_route);
+
 
 app.listen(port, () => {
   console.log(`server running at port:${port}`);
