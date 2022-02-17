@@ -3,6 +3,11 @@ const app = express();
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const sessions = require("express-session");
+const fileupload = require("express-fileupload");
+app.use(fileupload());
+const csv = require("csv-parser");
+// const multer = require("multer");
+const fs = require('fs');
 const userRoute = require("./routes/user.route");
 const productRoute = require("./routes/product.route");
 const newRoute = require("./routes/user.route");
@@ -12,6 +17,7 @@ const deleteUserRoute = require("./routes/user.route");
 const deleteProductRoute = require("./routes/product.route");
 const AddCartRoute = require("./routes/cart.route");
 const dash_schedule_route = require("./routes/dash_schedule_slots");
+const uploadRoute = require("./routes/product.route");
 const port = 5000;
 
 // mongodb connection....!
@@ -56,6 +62,7 @@ app.use("/api/Productsupdate", UpdateProductRoute);
 app.use("/api/Userdelete", deleteUserRoute);
 app.use("/api/productdelete", deleteProductRoute);
 app.use("/api/Cart", AddCartRoute);
+app.use("/api/upload" , uploadRoute);
 app.use("/live/call", dash_schedule_route);
 
 

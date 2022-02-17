@@ -33,7 +33,7 @@ exports.getSlots = async (req, res) => {
 
     var slot = await Dash_call_Schedule.findOne({merchant_id: user_id});
     if (slot) {
-      slot_check = (slot.current_date,slot.type,slot.days,startHour,endHour, async (check) => {
+      slot_check (slot.current_date,slot.type,slot.days,startHour,endHour, async (check) => {
         var free_slots = [];
         if (check.status) {
           var booked_slots = await Live_Request.find({

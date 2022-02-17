@@ -1,4 +1,6 @@
 const Product = require("../models/product")
+const fs = require('fs');
+const csv = require('csv-parser');
 
 exports.search_users = async (req,res) => {
     try {
@@ -117,5 +119,33 @@ exports.deleteProduct = async (req,res) => {
         })
     }
 } 
+
+
+exports.uploadProduct = async (req,res) => {
+    var results = [];
+    fs.createReadStream('sample.csv')
+    .pipe(csv({}))
+    .on('data', (data) => {
+        // console.log(data, "ggyu")
+        // results.push(data)
+        const productData = new Product({
+            title: data.title,
+            price: data.price,
+            mrp: data.mrp,
+            image: data.image,
+            quantity: data.quantity,
+            sizes: data.sizes,
+            colors: data.colors
+        })
+        results.push(productData) 
+    })
+    .on('end', () => {
+        console.log(results)
+        res.status(201).json({
+            message : "file uploaded...!",
+            results 
+        })
+    })
+}
 
 
