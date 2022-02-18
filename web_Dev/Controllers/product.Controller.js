@@ -124,7 +124,7 @@ exports.deleteProduct = async (req,res) => {
     }
 } 
 
-
+// here is file upload api...!
 exports.uploadProduct = async (req,res) => {
     var results = [];
     // const upload = req.files.product
