@@ -38,7 +38,7 @@ mongoose
         console.log(err);
     });
 
-
+// changing into express json....!
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
