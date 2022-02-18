@@ -22,10 +22,6 @@ const dash_schedule_route = require("./routes/dash_schedule_slots");
 const uploadRoute = require("./routes/product.route");
 const port = 5000;
 
-
-
-
-
 // mongodb connection....!
 mongoose
     .connect(
@@ -72,6 +68,7 @@ app.use("/api/upload" , uploadRoute);
 app.use("/live/call", dash_schedule_route);
 
 
+// server is running on this port ....!
 app.listen(port, () => {
   console.log(`server running at port:${port}`);
 });
