@@ -1,6 +1,10 @@
 const Product = require("../models/product")
 const fs = require('fs');
-const csv = require('csv-parser');
+// const csv = require('csv-parser');
+const multer = require('multer');
+const csv = require('fast-csv')
+const fileUpload = require("express-fileupload");
+const path = require('path');
 
 exports.search_users = async (req,res) => {
     try {
@@ -123,10 +127,12 @@ exports.deleteProduct = async (req,res) => {
 
 exports.uploadProduct = async (req,res) => {
     var results = [];
-    fs.createReadStream('sample.csv')
-    .pipe(csv({}))
+    // const upload = req.files.product
+    // fs.createReadStream(req.file.path)
+    csv.parseFile(req.file.path)
+    // .pipe(csv({}))
     .on('data', (data) => {
-        // console.log(data, "ggyu")
+        // console.log(data, "ggyu") 
         // results.push(data)
         const productData = new Product({
             title: data.title,

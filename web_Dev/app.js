@@ -5,9 +5,11 @@ const cookieParser = require("cookie-parser");
 const sessions = require("express-session");
 const fileupload = require("express-fileupload");
 app.use(fileupload());
-const csv = require("csv-parser");
-// const multer = require("multer");
+const csv = require("fast-csv");
+const multer = require("multer");
+const upload = multer({ dest: 'tmp/csv/' })
 const fs = require('fs');
+const path = require('path');
 const userRoute = require("./routes/user.route");
 const productRoute = require("./routes/product.route");
 const newRoute = require("./routes/user.route");
@@ -19,6 +21,10 @@ const AddCartRoute = require("./routes/cart.route");
 const dash_schedule_route = require("./routes/dash_schedule_slots");
 const uploadRoute = require("./routes/product.route");
 const port = 5000;
+
+
+
+
 
 // mongodb connection....!
 mongoose
