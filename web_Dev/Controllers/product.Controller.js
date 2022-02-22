@@ -127,26 +127,47 @@ exports.deleteProduct = async (req,res) => {
 // here is file upload api...!
 exports.uploadProduct = async (req,res) => {
     var results = [];
-    // const upload = req.files.product
-    // fs.createReadStream(req.file.path)
-    csv.parseFile(req.file.path)
-    // .pipe(csv({}))
+
+
+
+    // sending a csv file to write on service side and then read the file ....!
+    fs.writeFileSync('sample.csv',req.files.product.data)
+    csv.parseFile('sample.csv')
     .on('data', (data) => {
-        // console.log(data, "ggyu") 
-        // results.push(data)
-        const productData = new Product({
-            title: data.title,
-            price: data.price,
-            mrp: data.mrp,
-            image: data.image,
-            quantity: data.quantity,
-            sizes: data.sizes,
-            colors: data.colors
-        })
-        results.push(productData) 
+        results.push(data)
     })
     .on('end', () => {
-        console.log(results)
+         // here where am checking whether the file exists or not and deletes when the file gets read by the server ....!
+        const deleteFile = './sample.csv'
+        if (fs.existsSync(deleteFile)) {
+            fs.unlink(deleteFile, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.log('deleted');
+            })
+        }
+        var title_index = results[0].indexOf('title')
+        var price_index = results[0].indexOf('price')
+        var mrp_index = results[0].indexOf('mrp')
+        var image_index = results[0].indexOf('image')
+        var quantity_index = results[0].indexOf('quantity')
+        var sizes_index = results[0].indexOf('sizes')
+        var colors_index = results[0].indexOf('colors')
+        results.shift();
+        for (var result of results) {
+            console.log("result",result)
+            Product.create ({
+                title: result[title_index],
+                price: result[price_index],
+                mrp: result[mrp_index],
+                image: result[image_index],
+                quantity: result[quantity_index],
+                sizes: result[sizes_index],
+                colors: result[colors_index]
+            })
+        }
+        // console.log(results)
         res.status(201).json({
             message : "file uploaded...!",
             results 
