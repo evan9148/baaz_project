@@ -127,9 +127,7 @@ exports.deleteProduct = async (req,res) => {
 // here is file upload api...!
 exports.uploadProduct = async (req,res) => {
     var results = [];
-
-
-
+    
     // sending a csv file to write on service side and then read the file ....!
     fs.writeFileSync('sample.csv',req.files.product.data)
     csv.parseFile('sample.csv')

@@ -9,7 +9,6 @@ const csv = require("fast-csv");
 const multer = require("multer");
 const upload = multer({ dest: 'tmp/csv/' })
 const fs = require('fs');
-const path = require('path');
 const userRoute = require("./routes/user.route");
 const productRoute = require("./routes/product.route");
 const newRoute = require("./routes/user.route");
@@ -20,6 +19,7 @@ const deleteProductRoute = require("./routes/product.route");
 const AddCartRoute = require("./routes/cart.route");
 const dash_schedule_route = require("./routes/dash_schedule_slots");
 const uploadRoute = require("./routes/product.route");
+const livestreamstatusRoute = require("./routes/liveStreamstatus.route")
 const port = 5000;
 
 // mongodb connection....!
@@ -66,6 +66,7 @@ app.use("/api/productdelete", deleteProductRoute);
 app.use("/api/Cart", AddCartRoute);
 app.use("/api/upload" , uploadRoute);
 app.use("/live/call", dash_schedule_route);
+app.use("/api/getliveStreamData", livestreamstatusRoute);
 
 
 // server is running on this port ....!
