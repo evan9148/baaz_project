@@ -1,0 +1,5 @@
+[
+  { availability: true, time: 1642131009404 },
+  { availability: true, time: 1642132809404 },
+  { availability: true, time: 1642134609404 }
+]
