@@ -15,11 +15,11 @@ exports.getUserLivestream = async (req,res) => {
                 const livestreamstatusId = i._id
                 const getwishlistLive = await Wishlist.find({ userid: livestreamstatusId });
                 console.log(getwishlistLive,"wwwwwwwwww")
+                res.status(201).json({
+                    message : "here is your liveStreamdata..!",
+                    getwishlistLive
+                })
             }
-            // res.status(201).json({
-            //     message : "here is your liveStreamdata..!",
-            //     getLivestream
-            // })
         }else {
             res.status(400).json({
                 notfound : `user not found...!`

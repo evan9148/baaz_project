@@ -22,17 +22,6 @@ exports.getSlots = async (req, res) => {
     var days = ['sun', 'mon', 'tue', 'wed', 'thur', 'fri', 'sat'];
     var d = new Date(current_date);
     var dayName = days[d.getDay()];
-    var startHour = Date.UTC(
-      current_date.getFullYear(),
-      current_date.getMonth(),
-      current_date.getDate(),
-      0,
-      0,
-      0,
-      0
-    );
-    var endHour = startHour + 86400000;
-    // var week = current_date;
 
   var slot = await Dash_call_Schedule.findOne({ merchant_id: user_id });
   console.log(slot,"hhhhhhh")
@@ -43,29 +32,52 @@ exports.getSlots = async (req, res) => {
       for (var i of slot.slots){
         let x = {
           slotInterval: 30,
-          openTime: i.start_time,
-          closeTime: i.end_time
+          openTime: new Date(i.start_time),
+          closeTime: new Date(i.end_time)
         };
+        console.log(x.openTime,111)
 
-        //Format the time
-        let startTime = new Date(x.openTime).getTime();
-        console.log(startTime,"sssssss")
+        //Format the time...! q
+              
+        let startTime = new Date(
+          current_date.getFullYear(),
+          current_date.getMonth(),
+          current_date.getDate(),
+          x.openTime.getHours(),
+          x.openTime.getMinutes(),
+          x.openTime.getDate()).getTime();
+        console.log(startTime,"start")
 
         //Format the end time and the next day to it
-        let endTime = new Date(x.closeTime).getTime();
+        let endTime = new Date(
+          current_date.getFullYear(),
+          current_date.getMonth(),
+          current_date.getDate(),
+          x.closeTime.getHours(),
+          x.closeTime.getMinutes(),
+          x.closeTime.getDate()).getTime();
+        console.log(endTime,"end")
 
         //Loop over the times - only pushes time with 30 minutes interval
         while (startTime < endTime) {
           //Push times
           allTimes.push({
             availability: true,
-            time: new Date(startTime).getTime()
+            time: new Date(startTime).getTime(),
+            slot_Id: fetch_slot_id(startTime)
           });
           //Add interval of 30 minutes
           startTime = new Date(startTime)
-          startTime.setMinutes(startTime.getMinutes()+x.slotInterval);
+          startTime.setMinutes(startTime.getMinutes() + x.slotInterval);
         }
         console.log(allTimes)
+      }
+    }else {
+      if (new Date(req.query.filter).toString() === 'Invalid Date'){
+        throw {
+          err_status: true,
+          message: `your filter is invaild...!`,
+        };
       }
     }
     res.status(201).json({
@@ -85,6 +97,18 @@ exports.getSlots = async (req, res) => {
       res.status(400).json({ message: "something went wrong!" });
     }
   }
+};
+
+var fetch_slot_id = (time) => {
+  time = new Date(time);
+  var yyyy = time.getFullYear();
+  var mm =
+    time.getMonth() + 1 >= 10 ? time.getMonth() + 1 : `0${time.getMonth() + 1}`;
+  var dd = time.getDate() >= 10 ? time.getDate() : `0${time.getDate()}`;
+  var hh = time.getHours() >= 10 ? time.getHours() : `0${time.getHours()}`;
+  var m = time.getMinutes() >= 10 ? time.getMinutes() : `0${time.getMinutes()}`;
+  var date_str = `${yyyy}_${mm}_${dd}_${hh}_${m}`;
+  return date_str;
 };
 
 
