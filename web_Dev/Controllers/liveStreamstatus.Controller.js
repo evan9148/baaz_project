@@ -14,7 +14,7 @@ exports.getUserLivestream = async (req,res) => {
             for (var i of getLivestream){
                 const livestreamstatusId = i._id
                 const getwishlistLive = await Wishlist.find({ userid: livestreamstatusId });
-                console.log(getwishlistLive,"wwwwwwwwww")
+                // console.log(getwishlistLive,"wwwwwwwwww")
                 res.status(201).json({
                     message : "here is your liveStreamdata..!",
                     getwishlistLive
@@ -26,7 +26,7 @@ exports.getUserLivestream = async (req,res) => {
             })
         }
     }catch (error){
-        console.log(error, "ghdkfj")
+        console.log(error, "ghdkfj") 
         res.status(400).json({
             err : error
         })

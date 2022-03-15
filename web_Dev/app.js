@@ -67,7 +67,7 @@ app.use("/api/productdelete", deleteProductRoute);
 app.use("/api/Cart", AddCartRoute);
 app.use("/api/upload" , uploadRoute);
 app.use("/live/call", dash_schedule_route);
-app.use("/api/getliveStreamData", livestreamstatusRoute);
+app.use("/", livestreamstatusRoute);
 
 
 // server is running on this port ....!
