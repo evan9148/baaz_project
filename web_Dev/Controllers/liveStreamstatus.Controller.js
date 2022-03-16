@@ -30,5 +30,5 @@ exports.getUserLivestream = async (req,res) => {
         res.status(400).json({
             err : error
         })
-    }
+    } 
 }
